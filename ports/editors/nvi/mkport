@@ -1,0 +1,32 @@
+#!/bin/sh
+
+. /usr/bin/pkg
+
+pkg=nvi
+version="1.81.6"
+category=editors
+arch="x86_64"
+basedir="/"
+pstamp="$version"
+name="ex-vi clone"
+source="http://harrier.slackbuilds.org/misc/$pkg-$version.tar.bz2"
+
+mkdir -p /tmp/"$pkg"
+
+wget "$source"
+tar xf "$pkg"-"$version".tar.bz2
+
+cd "$pkg"-$version
+
+cd build.unix
+../dist/configure \
+    --prefix=/usr/local \
+    --enable-widechar \
+    --disable-static \
+    --program-prefix="n"
+
+make
+make install DESTDIR=/tmp/$pkg
+
+mkpkg
+
