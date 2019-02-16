@@ -1,0 +1,31 @@
+#!/sbin/sh
+
+. heirloom-pkg
+
+pkg=transmission-gtk
+version="2.94"
+category=net
+arch="x86_64"
+basedir="/"
+pstamp="$version"
+name="bittorrent client"
+source="https://github.com/transmission/transmission-releases/raw/master/transmission-$version.tar.xz"
+# TODO
+#deps="graphics/gtk3 libraries/libevent"
+mkdir -p /tmp/$pkg
+
+wget "$source"
+xzcat transmission-"$version".tar.xz | tar xf -
+
+cd transmission-$version
+    
+./configure --prefix=/usr/local \
+	--with-gtk \
+	--disable-cli \
+	--disable-daemon
+
+make
+make DESTDIR=/tmp/$pkg install
+
+mkpkg
+

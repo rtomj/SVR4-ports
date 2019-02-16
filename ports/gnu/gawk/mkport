@@ -1,0 +1,29 @@
+#!/bin/sh -e
+
+. pkg
+
+pkg=gawk
+version="4.2.1"
+category=gnu
+arch="x86_64"
+basedir="/"
+pstamp="$version"
+name="pattern scanning and processing language"
+source="http://ftpmirror.gnu.org/gnu/$pkg/$pkg-$version.tar.xz"
+
+mkdir -p /tmp/$pkg
+
+#wget "$source"
+xzcat "$pkg"-"$version".tar.xz | tar xf -
+
+cd "$pkg"-$version
+
+# Maybe a separate GNU directory like heirloom's 5bin and 5lib?
+./configure --prefix=/usr/gnu \
+	--libexecdir=/usr/gnu/lib \
+        --disable-nls
+make
+make DESTDIR=/tmp/$pkg install
+
+mkpkg
+

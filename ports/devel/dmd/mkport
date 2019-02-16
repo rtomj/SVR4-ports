@@ -1,0 +1,49 @@
+#!/bin/sh -e
+
+. pkg
+
+pkg=dmd
+version="2.084.0"
+category=devel
+arch="x86_64"
+basedir="/"
+pstamp="$version"
+name="official reference D compiler"
+source="http://downloads.dlang.org/releases/2.x/$version/$pkg.$version.linux.tar.xz"
+
+mkdir -p /tmp/$pkg/usr/local/bin
+mkdir -p /tmp/$pkg/usr/local/lib
+mkdir -p /tmp/$pkg/etc
+mkdir -p /tmp/dmd/usr/local/include/dmd
+
+#wget "$source"
+xzcat $pkg.$version.linux.tar.xz | tar xf -
+
+chmod -R 755 dmd2
+
+# POSIX sh doesnt support brace expansions
+# Copy binaries
+cp dmd2/linux/bin64/* /tmp/$pkg/usr/local/bin
+rm /tmp/$pkg/usr/local/bin/README.TXT
+rm /tmp/$pkg/usr/local/bin/dmd.conf
+
+
+# Copy library
+cp dmd2/linux/lib64/libphobos2.a /tmp/$pkg/usr/local/lib/libphobos2.a
+
+# Copy standard library 
+mkdir -p /tmp/$pkg/usr/include/d/dmd
+cp -r dmd2/src/phobos/std /tmp/$pkg/usr/local/include/dmd
+cp -r dmd2/src/phobos/etc/c /tmp/$pkg/usr/local/include/dmd
+
+# Runtime
+cp -r dmd2/src/druntime/src/core /tmp/$pkg/usr/local/include/dmd
+cp -r dmd2/src/druntime/src/etc /tmp/$pkg/usr/local/include/dmd
+cp -r dmd2/src/druntime/src/object.d /tmp/$pkg/usr/local/include/dmd
+cp -r dmd2/src/druntime/src/gc /tmp/$pkg/usr/local/include/dmd
+cp -r dmd2/src/druntime/src/rt /tmp/$pkg/usr/local/include/dmd
+
+echo "[Environment64]
+DFLAGS=-I/usr/local/include/dmd -L-L/usr/local/lib -L--export-dynamic -fPIC" > /etc/dmd.conf
+mkpkg
+
