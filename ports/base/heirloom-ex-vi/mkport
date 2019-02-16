@@ -1,0 +1,24 @@
+#!/bin/sh -e
+
+. /usr/bin/pkg
+
+pkg=heirloom-ex-vi
+version=050325
+category=base
+arch="x86_64"
+source="http://downloads.sourceforge.net/project/ex-vi/ex-vi/"$version"/ex-"$version".tar.bz2"
+basedir="/"
+pstamp="$version"
+name="traditional vi"
+
+mkdir -p /tmp/$pkg
+pkg -wget $source
+tar xf ex-$version.tar.bz2
+
+cd ex-"$version"
+sed -i 's/local/5bin/g' Makefile
+sed -i '83s/bin//g' Makefile
+make PREFIX=/usr/5bin
+make install DESTDIR=/tmp/$pkg
+
+mkpkg

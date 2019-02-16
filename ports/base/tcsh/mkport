@@ -19,13 +19,9 @@ tar xf "$pkg"-"$version".tar.gz
 
 cd "$pkg"-$version
 
-# fix compiler warnings
-#sed -ri 's/(_BSD|_SVID)_SOURCE/_DEFAULT_SOURCE/' config/linux
-
 ./configure --prefix=/usr --bindir=/bin --disable-nls
 make
 make DESTDIR=/tmp/$pkg install
-install -d /tmp/$pkg/etc
 
 mkpkg
 

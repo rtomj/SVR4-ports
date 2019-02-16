@@ -1,0 +1,28 @@
+#!/bin/sh -e
+
+. pkg
+
+pkg="heirloom-sh"
+version="1.0"
+category="base"
+arch="x86_64"
+basedir="/"
+pstamp="$version"
+name="heirloom sh"
+source="https://github.com/rtomj/heirloom-project/archive/v1.0.tar.gz"
+deps=""
+
+mkdir -p /tmp/"$pkg"/sbin
+wget "$source"
+tar xf v"$version".tar.gz
+
+cd heirloom-project-1.0/heirloom/heirloom-sh	
+sed -i '5s/ROOT=/ROOT=\/tmp\/heirloom-sh/' makefile
+
+make
+make install DESTDIR=/tmp/"$pkg"
+
+# SVR4 tools struggle with some symbolic links
+cp /tmp/$pkg/usr/5bin/sh /tmp/$pkg/sbin/sh
+mkpkg
+
