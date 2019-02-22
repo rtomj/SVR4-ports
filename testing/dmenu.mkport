@@ -1,0 +1,18 @@
+PKG=SVR4dmenu
+ARCH=x86_64
+CLASSES=none
+BASEDIR=/
+NAME=dmenu
+VERSION=4.9
+CATEGORY=x11
+DESC="suckless dynamic menu"
+VENDOR=suckless.org
+PKGSAV=/var/sadm/pkg/SUNdmenu/save
+SOURCE=https://dl.suckless.org/tools/dmenu-4.9.tar.gz
+SHA256SUM=b3971f4f354476a37b2afb498693649009b201550b0c7c88e866af8132b64945
+
+build() {
+	tar xf $NAME-$VERSION.tar.gz
+	cd $NAME-$VERSION
+	make DESTDIR=/tmp/$NAME PREFIX=/usr/local install
+}
